@@ -1,5 +1,5 @@
 //"Stack>ROI>Measure"
-//This macro is designed to create RIO based on user specifications for stacked images, ROI are then measured producing a tabulation of results
+//This macro is designed to create RIO based on user specifications for aligned & stacked (macro StackREG is recommended) images, ROI are then measured producing a tabulation of results
 //Original code by Dr. Lai Ding, Harvard NeuroDiscovery Center Enhanced Neuroimaging Core 
 //Designed by Maggie Wessling and Paul Messier, Boston 2014
 //version 3
