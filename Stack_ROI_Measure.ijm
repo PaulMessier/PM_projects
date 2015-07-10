@@ -1,8 +1,8 @@
+//Version 4 July 2015
 //"Stack>ROI>Measure"
 //This macro is designed to create RIO based on user specifications for aligned & stacked (macro StackREG is recommended) images, ROI are then measured producing a tabulation of results
 //Original code by Dr. Lai Ding, Harvard NeuroDiscovery Center Enhanced Neuroimaging Core 
-//Designed by Maggie Wessling and Paul Messier, Boston 2014
-//version 3
+//Designed by Maggie Wessling and Paul Messier, Boston 2014-2015
 
 //add roiarrange function get rid of Anomaly roi.
  
@@ -16,8 +16,8 @@ run("Options...", "iterations=1 count=1 black edm=Overwrite");
 
 // global variables.
 var threshold_method, spot_size_min, spot_size_max, pixelscale, pixelunit, threshold_factor, mincir, slicecount;
-var spot_size=newArray(10000), spot_class=newArray(10000), spot_mean_t1=newArray(10000), spot_mean_t2=newArray(10000), spot_mean_t3=newArray(10000), spot_count;
-var Spotcount=newArray(500), Increase=newArray(500), Decrease=newArray(500), Nochange=newArray(500), Anomaly=newArray(500);
+var spot_size=newArray(50000), spot_class=newArray(50000), spot_mean_t1=newArray(50000), spot_mean_t2=newArray(50000), spot_mean_t3=newArray(50000), spot_count;
+var Spotcount=newArray(1000), Increase=newArray(1000), Decrease=newArray(1000), Nochange=newArray(1000), Anomaly=newArray(1000);
 var percent, spotclass;
 var f, flag=0;
 
@@ -83,7 +83,7 @@ function spotfind()
   run("Z Project...", "start=1 stop="+nSlices+" projection=[Min Intensity]"); rename("min");
   imageCalculator("Subtract create", "max","min");
   rename("test");
-  run("Median...", "radius=2");
+
 
   // apply threshold method user input in dialog window
   setAutoThreshold(threshold_method);
@@ -92,6 +92,7 @@ function spotfind()
   setThreshold(lower*threshold_factor,upper);
   setOption("BlackBackground", true);
   run("Convert to Mask");
+  run("Median...", "radius=3");
 
   // apply size limitation user input in dialoag window
   run("Analyze Particles...", "size="+spot_size_min+"-"+spot_size_max+" pixel circularity="+mincir+"-1.00 show=Nothing add");
@@ -176,7 +177,7 @@ function roiarrange()
   k=0;
   for(i=0;i<spot_count;i++)
    {
-    if( spot_class[i] == "A" )
+    if( spot_class[i] == "N" )
      {
       roiManager("Select",i-k);
       roiManager("Delete");
@@ -231,10 +232,10 @@ function parameterinput()
   Dialog.addChoice("Slice Count:", newArray(2, 3));
   Dialog.addChoice("Threshold Method:", newArray("Default dark", "Huang dark", "Intermodes dark", "IsoData dark", "IJ_IsoData dark", "Li dark", "MaxEntropy dark", "Mean dark", "MinError dark", "Minimum dark", "Moments dark", "Otsu dark", "Percentile dark", "RenyiEntropy dark", "Shanbhag dark", "Triangle dark", "Yen dark" ));
   Dialog.addNumber("Threhsold Factor:", 1);
-  Dialog.addNumber("Minimum Spot Size(pixel):", 50);
-  Dialog.addNumber("Maximum Spot Size(pixel):", 600);
+  Dialog.addNumber("Minimum Spot Size(pixel):", 7);
+  Dialog.addNumber("Maximum Spot Size(pixel):", 700);
   Dialog.addNumber("Min Circularity:", 0.3);
-  Dialog.addNumber("Percent(%):", 30);
+  Dialog.addNumber("Percent(%):", 10);
   
   Dialog.show();
   
@@ -248,5 +249,3 @@ function parameterinput()
 
   slicecount=round(slicecount);
  }
-
- 
